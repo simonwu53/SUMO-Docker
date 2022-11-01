@@ -1,11 +1,6 @@
 # SUMO Docker Installation Guide
 
-### 1. Introduction
-
-This Dockerfile has only been tested on **Apple Silicon** Mac with **macOS 13.0 Ventura**, but generally the Dockerfile should be useful for others who wants to build SUMO docker on their own. It is created as a workaround for Mac users with the latest macOS because of lack of the compatible Command Line Tool (CLT) to compile sumo packages. This guide contains the latest method of connecting X11 app and enable OpenGL via docker, while the old socket-passing way doesn't work and will not work [in the near future](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949).
-
-Table of Contents
-=================
+### Table of Contents
 
 * [SUMO Docker Installation Guide](#sumo-docker-installation-guide)
   * [1. Introduction](#1-introduction)
@@ -23,6 +18,10 @@ Table of Contents
     * [3.4 Customized Launching](#34-customized-launching)
   * [4. Knowning issues](#4-knowning-issues)
   * [5. Trouble shooting &amp; References](#5-trouble-shooting--references)
+
+### 1. Introduction
+
+This Dockerfile has only been tested on **Apple Silicon** Mac with **macOS 13.0 Ventura**, but generally the Dockerfile should be useful for others who wants to build SUMO docker on their own. It is created as a workaround for Mac users with the latest macOS because of lack of the compatible Command Line Tool (CLT) to compile sumo packages. This guide contains the latest method of connecting X11 app and enable OpenGL via docker, while the old socket-passing way doesn't work and will not work [in the near future](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949).
 
 #### 1.1 Files in repo
 
