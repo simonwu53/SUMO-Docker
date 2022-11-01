@@ -2,9 +2,12 @@
 
 ### 1. Introduction
 
-This Dockerfile has only been tested on **Apple Silicon** Mac with **macOS 13.0 Ventura**. It is created as a workaround for Mac users with the latest macOS because of lack of the compatible Command Line Tool (CLT) to compile sumo packages. This guide contains the latest method of connecting X11 app via docker, while the old socket-passing way doesn't work and will not work [in the near future](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949).
+This Dockerfile has only been tested on **Apple Silicon** Mac with **macOS 13.0 Ventura**, but generally the Dockerfile should be useful for others who wants to build SUMO docker on their own. It is created as a workaround for Mac users with the latest macOS because of lack of the compatible Command Line Tool (CLT) to compile sumo packages. This guide contains the latest method of connecting X11 app and enable OpenGL via docker, while the old socket-passing way doesn't work and will not work [in the near future](https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949).
 
-#### 1.1 Contents
+* TOC
+{:toc}
+
+#### 1.1 Files in repo
 
 * Dockerfile - docker file instructions for creating container image
 * README.md - this file as a manual for installation
@@ -38,7 +41,7 @@ All steps will take approx. 3-10 mins.
 ##### 2.2.2 Build docker image
 
 1. open "Dockerfile" in a text editor.
-2. Modify username to your preferred one at line 5. 
+2. Modify username to your preferred one at line 5. Save the modified file.
 3. Open a terminal and navigate to the directory where the Dockerfile is located.
 4. Run command "docker build -t sumo-docker ." (NOTE: there is a dot in the end of the command). It will take some time to build the image.
 5. During the waiting time, we can continue to the following steps.
@@ -48,12 +51,13 @@ All steps will take approx. 3-10 mins.
 1. Copy or move "sumo-gui.sh" to the working directory where you store your sumo configurations. (e.g. your local sumo folder holding configurations)
 2. Open "sumo-gui.sh" in a text editor. 
 3. Modify "SUMO_USER" (at line 3) to the username you have set for the Dockerfile.
-4. Modify "WORKING_DIR" (at line 4) to the working directory you choose. The file in this directory will be visible to SUMO in the docker container at "/home/username/sumo". 
-5. Check whether the docker image has been built. If it's done, proceed to the following steps.
+4. Modify "WORKING_DIR" (at line 4) to the working directory you have chosen. The file in this directory will be visible to SUMO in the docker container at "/home/username/sumo". 
+5. Save the modified file.
+6. Check whether the docker image has been built. If it's done, proceed to the following steps.
 
-#### 2.3 Usages
+### 3. Usages
 
-##### 2.3.1 Run sumo-gui
+#### 3.1 Run sumo-gui
 
 Run command:
 
@@ -61,7 +65,7 @@ Run command:
 zsh sumo-gui.sh
 ```
 
-##### 2.3.2 Run netedit
+#### 3.2 Run netedit
 
 * Modify "CMD" (at line 5) from "sumo-gui" to "netedit" in "sumo-gui.sh". Then run command:
 
@@ -69,20 +73,41 @@ zsh sumo-gui.sh
 zsh sumo-gui.sh
 ```
 
-##### 2.3.3 Files saving and loading
+For other apps, do the same as above. 
 
-In any SUMO app, when you opening an existing file or saving files, choose from "/home/username/sumo" in the container. In your host machine, all necessary files/folders should be available in the same working directory set in the "sumo-gui.sh"
 
-##### 2.3.4 Customized Launching
+#### 3.3 Files saving and loading
+
+In any SUMO app, when you opening an existing file or saving a file, choose from "/home/username/sumo" in the container. On your host machine, all necessary files/folders should be available in the same working directory set in the "sumo-gui.sh".
+
+#### 3.4 Customized Launching
 
 * **[flexible start, suggested]** In order to run any command in the docker container, modifty "CMD" (at line 5) from "sumo-gui" to "/bin/bash" in "sumo-gui.sh". This will open an interactive terminal session for the container where you can run any command like "sumo-gui" and "netedit" without rerunning the script again when switching app.
-* **[keeping container, not suggested]** If you want to keep the created container for next time (although it's not suggested since the image has the SUMO installed and the persisting data is store in the host Mac, except that you have modified/added new libs/packages to the existing container), you can remove "--rm" flag at line 11 in "sumo-gui.sh". From next launch, you need to run line 8 & 9 from the script first, then run the existing container. 
+* **[keeping container, not suggested]** If you want to keep the created container for next time (although it's not suggested since the image has the SUMO installed and the persisting data is store on the host Mac, except that you have modified/added new libs/packages to the existing container), you can remove "--rm" flag at line 11 in "sumo-gui.sh". From next launch, you need to run line 8 & 9 from the script first, then run the existing container. 
+* Feel free to make your own customized lauchning script.
 
-#### 2.4 Knowning issues
+### 4. Knowning issues
 
 * In macOS Ventura, when you close a secondary window (e.g. saving window, config window), the main window will disappear. The application is actually still running, it's a bug in latest macOS. Activate mission control (control+up, or swipe up with 3 fingers, or Mission Control Key on Magic Keyboard if has), you will see a transparent XQuartz window, clicking on the window will bring it back.
 
-### 3. References
+### 5. Trouble shooting & References 
 
-* Fixing X11 fowarding for Mac Dorcker: <https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949>
-* Fixing OpenGL errors: <https://github.com/XQuartz/XQuartz/issues/144#issuecomment-907511509>
+* If you just want to make X11 forwarding work on Mac Docker, go through this comprehensive tutorial: <https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949>
+* If your docker X11 app needs to enable OpenGL, do the following steps on your Mac:
+  * Follow the steps in section [2.2.1 Set up XQuartz](#221-set-up-xquartz)
+  * Run the following lines every time before starting your docker app (you can make it automatic): 
+
+```
+# enable connection from localhost
+xhost +localhost
+# specify the correct DISPLAY variable
+export DISPLAY=:0
+```
+
+  * Add the following arg when using "docker run":
+  
+```
+-e LIBGL_ALWAYS_INDIRECT=1 
+``` 
+
+  * Further reading, see original posts here: <https://github.com/XQuartz/XQuartz/issues/144#issuecomment-907511509>
