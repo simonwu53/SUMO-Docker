@@ -1,5 +1,45 @@
 # SUMO Docker Installation Guide
 
+### 0. Updates [01/11/2022]
+
+Apple has released the latest Command Line Tool which is compatible with the latest macOS 13 Ventura. To update, do the following steps:
+
+##### If you have installed CLT:
+
+1. Click "" icon from the top left corner, select "System Settings...".
+2. Navigate to "General" -- "Software Update".
+3. Update Command Line Tool.
+
+##### If you haven't installed CLT:
+
+1. Open "terminal".
+2. Run the following command:
+
+```
+xcode-select --install
+```
+
+1. Select "Install" to finish installation.
+
+##### Then you can install SUMO from Homebrew as suggested in doc
+
+##### 0.1 Post-Installation
+
+* After installed SUMO instructed by official doc. You need to add following line in ".zshrc" file:
+
+```
+echo "export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo" >> ~/.zshrc
+```
+
+* Steps to open "sumo-gui" if you have installed GUI apps from brew:
+  * Open "Finder", from left side column, navigate to "Applications" folder (located at /Applications).
+  * Find `SUMO GUI.app`, right click, select "Open". And choose "Open" in the warning dialogue.
+  * If you don't see the warning dialogue above. Right click again, and "Open" again until you see the warning dialogue.
+  * Do the same for other SUMO GUI apps.
+  * If the above method doesn't work sometimes, run command: `xattr -cr /path/to/application.app`
+
+---
+
 ### Table of Contents
 
 * [SUMO Docker Installation Guide](#sumo-docker-installation-guide)
