@@ -28,7 +28,11 @@ xcode-select --install
 * After installed SUMO instructed by official doc. You need to add following line in ".zshrc" file:
 
 ```
-echo "export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo" >> ~/.zshrc
+# on Apple Silicon Mac
+echo "export SUMO_HOME=/opt/homebrew/opt/sumo/share/sumo" >> ~/.zshrc
+
+# on Intel Mac, depends on your SUMO version
+echo "export SUMO_HOME=/usr/local/Cellar/sumo/1.14.1/share/sumo/" >> ~/.zshrc
 ```
 
 * Steps to open "sumo-gui" if you have installed GUI apps from brew:
@@ -36,7 +40,7 @@ echo "export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo" >> ~/.zshrc
   * Find `SUMO GUI.app`, right click, select "Open". And choose "Open" in the warning dialogue.
   * If you don't see the warning dialogue above. Right click again, and "Open" again until you see the warning dialogue.
   * Do the same for other SUMO GUI apps.
-  * If the above method doesn't work sometimes, run command: `xattr -cr /path/to/application.app`
+  * If the above method doesn't work sometimes, run command: `xattr -cr /path/to/sumo_application.app`
 
 ---
 
